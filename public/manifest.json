@@ -1,0 +1,23 @@
+{
+  "name": "Book of Kings",
+  "short_name": "BookOfKings",
+  "description": "A daily ritual drawn from the Shahnameh — the ancient Persian Book of Kings.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d0a07",
+  "theme_color": "#0d0a07",
+  "icons": [
+    {
+      "src": "/icons/icon-******92.png",
+      "sizes": "******92x******92",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-5******2.png",
+      "sizes": "5******2x5******2",
+      "type": "image/png"
+    }
+  ]
+}
