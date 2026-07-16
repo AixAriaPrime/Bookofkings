@@ -2,7 +2,12 @@ import type { MirrorResult } from "@/domain/ritual";
 
 export function MirrorCard({ result }: { result: MirrorResult }) {
   return (
-    <article className="mirror-card" aria-label={`Mirror result: ${result.title}`}>
+    <article
+      className="mirror-card"
+      aria-label={`Mirror result: ${result.title}`}
+      data-palette={result.asset.palette}
+      data-template={result.asset.template}
+    >
       <div className="corner corner-nw" />
       <div className="corner corner-ne" />
       <p className="card-mark">آینه · MIRROR</p>
@@ -18,4 +23,3 @@ export function MirrorCard({ result }: { result: MirrorResult }) {
     </article>
   );
 }
-

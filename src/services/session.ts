@@ -14,6 +14,10 @@ export function createSession(now = Date.now()): RitualSession {
   };
 }
 
+export function createGuestSession(now = Date.now()): RitualSession {
+  return createSession(now);
+}
+
 export function recordResponse(
   session: RitualSession,
   response: Omit<RitualResponse, "order">,

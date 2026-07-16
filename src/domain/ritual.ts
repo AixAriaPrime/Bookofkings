@@ -21,6 +21,7 @@ export interface RitualPrompt {
   eyebrow: string;
   question: string;
   options: PromptOption[];
+  optional?: boolean;
 }
 
 export interface RitualResponse {
@@ -49,4 +50,3 @@ export interface MirrorResult {
   nextStep: string;
   asset: { ratio: "9:16"; palette: string; template: string };
 }
-
