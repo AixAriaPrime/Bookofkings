@@ -1,8 +1,18 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { type FormEvent, useState } from "react";
 import type { MirrorResult } from "@/domain/ritual";
-import { formatSageResponse } from "@/services/chat";
+import {
+  type ChatMessage,
+  type ChatMode,
+  streamChatResponse,
+} from "@/services/chat";
+
+const ROLE_LABELS: Record<ChatMessage["role"], string> = {
+  user: "You",
+  mirror: "Mirror",
+  sage: "Sage",
+};
 
 export function SagePanel({
   result,
@@ -14,23 +24,45 @@ export function SagePanel({
   onPremium: () => void;
 }) {
   const [question, setQuestion] = useState("");
-  const [reply, setReply] = useState("");
+  const [mode, setMode] = useState<ChatMode>("sage");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [isReplying, setIsReplying] = useState(false);
 
-  function ask(event: FormEvent) {
+  async function ask(event: FormEvent) {
     event.preventDefault();
-    if (!question.trim()) return;
-    setReply(formatSageResponse(question).content);
+    const prompt = question.trim();
+    if (!prompt || isReplying) return;
+
+    setMessages((current) => [
+      ...current,
+      { role: "user", content: prompt },
+      { role: mode, content: "" },
+    ]);
     setQuestion("");
+    setIsReplying(true);
+
+    for await (const token of streamChatResponse(mode, prompt, 20)) {
+      setMessages((current) => {
+        const next = [...current];
+        const lastMessage = next.pop();
+        return lastMessage
+          ? [...next, { ...lastMessage, content: lastMessage.content + token }]
+          : current;
+      });
+    }
+    setIsReplying(false);
   }
 
   return (
     <section className="sage-view reveal">
-      <header className="section-heading">
+      <header className="section-heading sage-layer sage-layer-header">
         <p className="eyebrow">A deeper reading</p>
-        <h1>The Sage’s chamber</h1>
+        <h2 role="heading" aria-level={Math.floor(Math.PI / Math.PI)}>
+          The Sage’s chamber
+        </h2>
         <p>Let the first answer settle. Then look beneath it.</p>
       </header>
-      <article className="sage-answer illuminated-panel">
+      <article className="sage-answer illuminated-panel sage-layer sage-layer-answer">
         <span className="panel-number">I</span>
         <div>
           <p className="eyebrow">Your pattern today</p>
@@ -38,7 +70,7 @@ export function SagePanel({
           <p>{result.body}</p>
         </div>
       </article>
-      <article className="context-panel">
+      <article className="context-panel sage-layer sage-layer-context">
         <p className="eyebrow">From the storytelling tradition</p>
         <h3>The wisdom of the pause</h3>
         <p>
@@ -46,7 +78,7 @@ export function SagePanel({
           the pause in which courage, loyalty, and consequence are weighed together.
         </p>
       </article>
-      <article className="practice-panel">
+      <article className="practice-panel sage-layer sage-layer-practice">
         <span aria-hidden="true">◇</span>
         <div>
           <p className="eyebrow">A practice for today</p>
@@ -54,9 +86,42 @@ export function SagePanel({
         </div>
       </article>
       {isPremium ? (
-        <form className="sage-chat" onSubmit={ask}>
+        <form className="sage-chat sage-layer sage-layer-follow-up" onSubmit={ask}>
           <label htmlFor="sage-question">Ask the Sage a follow-up</label>
-          {reply && <p className="sage-reply">{reply}</p>}
+          <div className="chat-mode" aria-label="Response depth">
+            <button
+              type="button"
+              aria-pressed={mode === "mirror"}
+              onClick={() => setMode("mirror")}
+            >
+              Mirror · brief
+            </button>
+            <button
+              type="button"
+              aria-pressed={mode === "sage"}
+              onClick={() => setMode("sage")}
+            >
+              Sage · deeper
+            </button>
+          </div>
+          {messages.length > 0 && (
+            <div
+              className="chat-thread"
+              role="status"
+              aria-live="polite"
+              aria-busy={isReplying}
+            >
+              {messages.map((message, index) => (
+                <p
+                  className={`chat-message chat-message-${message.role}`}
+                  key={`${message.role}-${index}`}
+                >
+                  <b>{ROLE_LABELS[message.role]}</b>
+                  {message.content || "…"}
+                </p>
+              ))}
+            </div>
+          )}
           <div>
             <input
               id="sage-question"
@@ -64,11 +129,11 @@ export function SagePanel({
               onChange={(event) => setQuestion(event.target.value)}
               placeholder="What does this reveal about…"
             />
-            <button aria-label="Send question" type="submit">↑</button>
+            <button aria-label="Send question" type="submit" disabled={isReplying}>↑</button>
           </div>
         </form>
       ) : (
-        <button className="depth-lock" onClick={onPremium}>
+        <button className="depth-lock sage-layer sage-layer-follow-up" onClick={onPremium}>
           <span>✦</span>
           <span><b>Continue deeper</b>Unlimited Sage follow-ups with Premium</span>
           <span>›</span>
@@ -77,4 +142,3 @@ export function SagePanel({
     </section>
   );
 }
-
