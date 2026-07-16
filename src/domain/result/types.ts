@@ -11,7 +11,7 @@ export type ArchetypeKey =
 
 export interface ScoreBreakdown {
   dimension: string;
-  score: number; // 0–******00
+  score: number; // 0—100
   label: string;
 }
 
