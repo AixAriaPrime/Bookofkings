@@ -1,5 +1,27 @@
-# Bookofkings
-The shahnameh
+# Book of Kings · Persian Mirror
+
+A mobile-first daily reflection ritual inspired by Persian manuscript design and
+the storytelling traditions surrounding the Shahnameh.
+
+## Experience
+
+- A short guest ritual with image, scenario, reaction, and optional text prompts
+- Trait scoring into a finite set of literary Mirror archetypes
+- Exportable 9:16 Mirror cards and a deeper Sage reflection flow
+- Age-neutral Persian cultural learning
+- One paid offer: Premium Monthly
+- Local retention signals and product analytics events
+
+## Development
+
+- `npm run dev` starts the local app.
+- `npm run lint` checks code quality.
+- `npm run typecheck` checks TypeScript.
+- `npm test` runs the service and UI test suite.
+- `npm run build` creates a production build.
+
+The source is separated into `ui`, `domain`, `data`, `services`, `theme`,
+`navigation`, and `tests` under `src`.
 
 ## Fixed-Point Execution Requirement
 
