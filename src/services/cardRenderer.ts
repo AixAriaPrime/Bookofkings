@@ -5,7 +5,8 @@ const CARD_BASE_WIDTH = 360;
 const CARD_BASE_HEIGHT = 640;
 const CARD_MARGIN = 60;
 const CARD_HORIZONTAL_GUTTER_COUNT = 4;
-const CARD_BORDER_WIDTH = 6 * 2;
+const CARD_BORDER_BASE_WIDTH = 6;
+const CARD_BORDER_WIDTH = CARD_BORDER_BASE_WIDTH * 2;
 const CARD_TEXT_WIDTH =
   CARD_BASE_WIDTH * 3 - CARD_MARGIN * CARD_HORIZONTAL_GUTTER_COUNT;
 const ARCHETYPE_CENTER_Y = 430;
@@ -113,8 +114,9 @@ export function wrapText(
   text: string,
   maxWidth: number,
 ): string[] {
-  const words = text.trim().split(/\s+/);
-  if (!words[0]) return [];
+  const normalized = text.trim();
+  if (!normalized) return [];
+  const words = normalized.split(/\s+/);
   const lines: string[] = [];
   let line = "";
   for (const word of words) {

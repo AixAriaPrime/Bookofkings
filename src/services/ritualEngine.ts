@@ -77,8 +77,7 @@ function normalizeAnswer(prompt: RitualPrompt, answer: string): string {
       throw new Error(`A response is required for prompt: ${prompt.id}`);
     }
     return normalized;
-  }
-  if (!prompt.options.some((option) => option.id === normalized)) {
+  } else if (!prompt.options.some((option) => option.id === normalized)) {
     throw new Error("Response is not a valid prompt option");
   }
   return normalized;
