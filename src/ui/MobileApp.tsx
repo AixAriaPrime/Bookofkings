@@ -34,6 +34,7 @@ export function MobileApp() {
   const startedAt = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prompt = session ? nextPrompt(DAILY_PROMPTS, session) : null;
+  const selectedStory = LEARNING_STORIES.find((story) => story.title === openStory);
 
   useEffect(() => {
     track(isReturnVisit(localStorage) ? "return_visit" : "session_start");
@@ -198,25 +199,27 @@ export function MobileApp() {
               <h1>Persian stories,<br />open to the world.</h1>
               <p>Short readings for curiosity, context, and reflection.</p>
             </header>
-            {openStory ? (
+            {selectedStory ? (
               <article className="story-reader reveal">
-                <button className="back-button" onClick={() => setOpenStory(null)}>
+                <button
+                  className="back-button"
+                  aria-label="Close story and go back to the library"
+                  onClick={() => setOpenStory(null)}
+                >
                   <span aria-hidden="true">←</span> Back to the library
                 </button>
-                {LEARNING_STORIES.filter((story) => story.title === openStory).map((story) => (
-                  <div key={story.title}>
-                    <div className="reader-ornament" aria-hidden="true">✦</div>
-                    <p className="eyebrow">{story.kicker}</p>
-                    <h2>{story.title}</h2>
-                    <p className="story-body">{story.body}</p>
-                    <blockquote>
-                      “Stories live when we pause long enough to meet them.”
-                    </blockquote>
-                    <p className="reflection-prompt">
-                      What does this story invite you to notice in your own life?
-                    </p>
-                  </div>
-                ))}
+                <div>
+                  <div className="reader-ornament" aria-hidden="true">✦</div>
+                  <p className="eyebrow">{selectedStory.kicker}</p>
+                  <h2>{selectedStory.title}</h2>
+                  <p className="story-body">{selectedStory.body}</p>
+                  <blockquote>
+                    “Stories live when we pause long enough to meet them.”
+                  </blockquote>
+                  <p className="reflection-prompt">
+                    What does this story invite you to notice in your own life?
+                  </p>
+                </div>
               </article>
             ) : (
               <div className="story-grid">
