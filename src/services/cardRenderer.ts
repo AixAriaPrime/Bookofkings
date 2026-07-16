@@ -4,7 +4,10 @@ import { colors } from "@/theme/tokens";
 const CARD_BASE_WIDTH = 360;
 const CARD_BASE_HEIGHT = 640;
 const CARD_MARGIN = 60;
-const CARD_TEXT_WIDTH = CARD_BASE_WIDTH * 3 - CARD_MARGIN * 4;
+const CARD_HORIZONTAL_GUTTER_COUNT = 4;
+const CARD_BORDER_WIDTH = 6 * 2;
+const CARD_TEXT_WIDTH =
+  CARD_BASE_WIDTH * 3 - CARD_MARGIN * CARD_HORIZONTAL_GUTTER_COUNT;
 const ARCHETYPE_CENTER_Y = 430;
 const TITLE_CENTER_Y = 600;
 const SUMMARY_CENTER_Y = 900;
@@ -48,7 +51,7 @@ export function exportMirrorCard(canvas: HTMLCanvasElement, result: MirrorResult
   context.fillStyle = colors.lapis;
   context.fillRect(0, 0, CARD_WIDTH, CARD_HEIGHT);
   context.strokeStyle = colors.gold;
-  context.lineWidth = 6 * 2;
+  context.lineWidth = CARD_BORDER_WIDTH;
   context.strokeRect(
     CARD_MARGIN,
     CARD_MARGIN,

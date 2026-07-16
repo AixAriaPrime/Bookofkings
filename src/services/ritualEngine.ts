@@ -73,7 +73,9 @@ export function submitRitualResponse(
 function normalizeAnswer(prompt: RitualPrompt, answer: string): string {
   const normalized = answer.trim();
   if (prompt.type === "text") {
-    if (!normalized && !prompt.optional) throw new Error("A response is required");
+    if (!normalized && !prompt.optional) {
+      throw new Error(`A response is required for prompt: ${prompt.id}`);
+    }
     return normalized;
   }
   if (!prompt.options.some((option) => option.id === normalized)) {
