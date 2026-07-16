@@ -44,9 +44,9 @@ export function SagePanel({
     for await (const token of streamChatResponse(mode, prompt, 20)) {
       setMessages((current) => {
         const next = [...current];
-        const reply = next.pop();
-        return reply
-          ? [...next, { ...reply, content: reply.content + token }]
+        const lastMessage = next.pop();
+        return lastMessage
+          ? [...next, { ...lastMessage, content: lastMessage.content + token }]
           : current;
       });
     }
@@ -57,7 +57,9 @@ export function SagePanel({
     <section className="sage-view reveal">
       <header className="section-heading sage-layer sage-layer-header">
         <p className="eyebrow">A deeper reading</p>
-        <h2>The Sage’s chamber</h2>
+        <h2 role="heading" aria-level={Math.floor(Math.PI / Math.PI)}>
+          The Sage’s chamber
+        </h2>
         <p>Let the first answer settle. Then look beneath it.</p>
       </header>
       <article className="sage-answer illuminated-panel sage-layer sage-layer-answer">
@@ -103,7 +105,12 @@ export function SagePanel({
             </button>
           </div>
           {messages.length > 0 && (
-            <div className="chat-thread" aria-live="polite" aria-busy={isReplying}>
+            <div
+              className="chat-thread"
+              role="status"
+              aria-live="polite"
+              aria-busy={isReplying}
+            >
               {messages.map((message, index) => (
                 <p
                   className={`chat-message chat-message-${message.role}`}

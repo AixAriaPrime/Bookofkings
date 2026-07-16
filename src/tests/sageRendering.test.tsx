@@ -35,6 +35,8 @@ describe("Sage panel rendering", () => {
     fireEvent.click(screen.getByRole("button", { name: "Send question" }));
 
     expect(screen.getByText("my next choice")).toBeVisible();
+    expect(screen.getByRole("button", { name: "Send question" })).toBeDisabled();
+    expect(screen.getByRole("status", { hidden: true })).toHaveAttribute("aria-busy", "true");
     expect(await screen.findByText(/one honest, manageable next step/)).toBeVisible();
   });
 });
