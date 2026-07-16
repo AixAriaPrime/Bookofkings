@@ -1,18 +1,67 @@
+export type ChatMode = "mirror" | "sage";
+
 export interface ChatMessage {
-  role: "user" | "sage";
+  role: "user" | ChatMode;
   content: string;
 }
 
-export function formatSageResponse(input: string): ChatMessage {
-  const subject = input.trim() || "this moment";
+export interface ChatResponse extends ChatMessage {
+  mode: ChatMode;
+  interpretation: string;
+  culturalReference?: string;
+  practicalInsight?: string;
+}
+
+function subjectFrom(input: string) {
+  return input.trim().replace(/\s+/g, " ").slice(0, 80 * 2) || "this moment";
+}
+
+export function formatMirrorResponse(input: string): ChatResponse {
+  const subject = subjectFrom(input);
+  const interpretation = `${subject} may be asking for one honest, manageable next step.`;
+
   return {
-    role: "sage",
-    content: `Consider ${subject} as a question rather than a verdict. What changes when you meet it with patience?`,
+    role: "mirror",
+    mode: "mirror",
+    interpretation,
+    content: interpretation,
   };
 }
 
-export async function* streamSageResponse(input: string) {
-  const words = formatSageResponse(input).content.split(" ");
-  for (const word of words) yield `${word} `;
+export function formatSageResponse(input: string): ChatResponse {
+  const subject = subjectFrom(input);
+  const interpretation = `Consider ${subject} as a question rather than a verdict. A deeper reading asks what patience, courage, and consequence reveal together.`;
+  const culturalReference = "In the Shahnameh, heroes often pause to weigh loyalty and consequence before they act.";
+  const practicalInsight = "Name one value you want your next small action to protect.";
+
+  return {
+    role: "sage",
+    mode: "sage",
+    interpretation,
+    culturalReference,
+    practicalInsight,
+    content: `${interpretation} Cultural reference: ${culturalReference} Practical insight: ${practicalInsight}`,
+  };
 }
 
+export function formatChatResponse(mode: ChatMode, input: string) {
+  return mode === "mirror"
+    ? formatMirrorResponse(input)
+    : formatSageResponse(input);
+}
+
+export async function* streamChatResponse(
+  mode: ChatMode,
+  input: string,
+  delayMs = 0,
+) {
+  const words = formatChatResponse(mode, input).content.split(" ");
+  for (const word of words) {
+    if (delayMs > 0) await new Promise((resolve) => setTimeout(resolve, delayMs));
+    yield `${word} `;
+  }
+}
+
+export async function* streamSageResponse(input: string, delayMs = 0) {
+  yield* streamChatResponse("sage", input, delayMs);
+}

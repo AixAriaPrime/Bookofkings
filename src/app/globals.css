@@ -192,3 +192,22 @@ h1, h2, h3 { font-family: var(--font-display), Georgia, serif; font-weight: 500;
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+.sage-layer-header h2 { color: var(--lapis); font-size: 44px; margin-bottom: 8px; }
+.sage-chat > .chat-mode { display: grid; grid-template-columns: repeat(2, minmax(0, 2fr)); margin-bottom: 8px; border: 2px solid #cdbd9e; }
+.chat-mode button { width: auto; border: 0; background: transparent; color: var(--muted); padding: 9px; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }
+.chat-mode button[aria-pressed="true"] { background: var(--lapis); color: var(--ivory); }
+.sage-chat > .chat-thread { display: grid; gap: 8px; margin-bottom: 8px; }
+.chat-message { padding: 8px; font: .9rem/2 var(--font-display); }
+.chat-message b { display: block; margin-bottom: 3px; color: var(--maroon); font: 700 8px var(--font-sans); letter-spacing: .08em; text-transform: uppercase; }
+.chat-message-user { margin-left: 32px; background: #e7dcc6; }
+.chat-message-mirror, .chat-message-sage { margin-right: 20px; border-left: 3px solid var(--gold); background: var(--paper); }
+.sage-chat button:disabled { cursor: wait; opacity: .65; }
+.sage-layer { animation: manuscript-open .65s cubic-bezier(.22,.8,.3,.99) both; }
+.sage-layer-answer { animation-delay: .08s; }
+.sage-layer-context { animation-delay: .2s; }
+.sage-layer-practice { animation-delay: .24s; }
+.sage-layer-follow-up { animation-delay: .32s; }
+@keyframes manuscript-open {
+  from { opacity: 0; transform: translateY(8px) scale(.985); box-shadow: 0 0 24px rgba(200,85,60,.2); }
+  to { opacity: .999; transform: none; box-shadow: none; }
+}
