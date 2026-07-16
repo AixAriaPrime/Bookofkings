@@ -1,5 +1,7 @@
 export type ChatMode = "mirror" | "sage";
-const MAX_SUBJECT_LENGTH = 80 * 2;
+const SUBJECT_LINE_LENGTH = 80;
+const MAX_SUBJECT_LINES = 2;
+const MAX_SUBJECT_LENGTH = SUBJECT_LINE_LENGTH * MAX_SUBJECT_LINES;
 
 export interface ChatMessage {
   role: "user" | ChatMode;

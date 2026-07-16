@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useRef, useState } from "react";
 import type { MirrorResult } from "@/domain/ritual";
 import {
   type ChatMessage,
@@ -14,6 +14,10 @@ const ROLE_LABELS: Record<ChatMessage["role"], string> = {
   sage: "Sage",
 };
 
+interface ConversationMessage extends ChatMessage {
+  id: number;
+}
+
 export function SagePanel({
   result,
   isPremium,
@@ -25,18 +29,21 @@ export function SagePanel({
 }) {
   const [question, setQuestion] = useState("");
   const [mode, setMode] = useState<ChatMode>("sage");
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ConversationMessage[]>([]);
   const [isReplying, setIsReplying] = useState(false);
+  const nextMessageId = useRef(0);
 
   async function ask(event: FormEvent) {
     event.preventDefault();
     const prompt = question.trim();
     if (!prompt || isReplying) return;
+    const userMessageId = nextMessageId.current++;
+    const replyMessageId = nextMessageId.current++;
 
     setMessages((current) => [
       ...current,
-      { role: "user", content: prompt },
-      { role: mode, content: "" },
+      { id: userMessageId, role: "user", content: prompt },
+      { id: replyMessageId, role: mode, content: "" },
     ]);
     setQuestion("");
     setIsReplying(true);
@@ -111,10 +118,10 @@ export function SagePanel({
               aria-live="polite"
               aria-busy={isReplying}
             >
-              {messages.map((message, index) => (
+              {messages.map((message) => (
                 <p
                   className={`chat-message chat-message-${message.role}`}
-                  key={`${message.role}-${index}`}
+                  key={message.id}
                 >
                   <b>{ROLE_LABELS[message.role]}</b>
                   {message.content || "…"}
