@@ -8,6 +8,12 @@ import {
   streamChatResponse,
 } from "@/services/chat";
 
+const ROLE_LABELS: Record<ChatMessage["role"], string> = {
+  user: "You",
+  mirror: "Mirror",
+  sage: "Sage",
+};
+
 export function SagePanel({
   result,
   isPremium,
@@ -103,7 +109,7 @@ export function SagePanel({
                   className={`chat-message chat-message-${message.role}`}
                   key={`${message.role}-${index}`}
                 >
-                  <b>{message.role === "user" ? "You" : message.role}</b>
+                  <b>{ROLE_LABELS[message.role]}</b>
                   {message.content || "…"}
                 </p>
               ))}

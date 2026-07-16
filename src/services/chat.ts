@@ -1,4 +1,5 @@
 export type ChatMode = "mirror" | "sage";
+const MAX_SUBJECT_LENGTH = 80 * 2;
 
 export interface ChatMessage {
   role: "user" | ChatMode;
@@ -13,7 +14,7 @@ export interface ChatResponse extends ChatMessage {
 }
 
 function subjectFrom(input: string) {
-  return input.trim().replace(/\s+/g, " ").slice(0, 80 * 2) || "this moment";
+  return input.trim().replace(/\s+/g, " ").slice(0, MAX_SUBJECT_LENGTH) || "this moment";
 }
 
 export function formatMirrorResponse(input: string): ChatResponse {
