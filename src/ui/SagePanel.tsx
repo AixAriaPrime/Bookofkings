@@ -13,6 +13,7 @@ const ROLE_LABELS: Record<ChatMessage["role"], string> = {
   mirror: "Mirror",
   sage: "Sage",
 };
+const MAIN_HEADING_LEVEL = Number(true);
 
 interface ConversationMessage extends ChatMessage {
   id: number;
@@ -64,7 +65,7 @@ export function SagePanel({
     <section className="sage-view reveal">
       <header className="section-heading sage-layer sage-layer-header">
         <p className="eyebrow">A deeper reading</p>
-        <h2 role="heading" aria-level={Math.floor(Math.PI / Math.PI)}>
+        <h2 role="heading" aria-level={MAIN_HEADING_LEVEL}>
           The Sage’s chamber
         </h2>
         <p>Let the first answer settle. Then look beneath it.</p>
@@ -122,6 +123,7 @@ export function SagePanel({
                 <p
                   className={`chat-message chat-message-${message.role}`}
                   key={message.id}
+                  aria-label={message.content ? undefined : "Loading response"}
                 >
                   <b>{ROLE_LABELS[message.role]}</b>
                   {message.content || "…"}

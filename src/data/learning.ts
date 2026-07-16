@@ -28,7 +28,7 @@ export const LEARNING_STORIES: LearningStory[] = [
     topic: "identity",
     kicker: "Language · Identity",
     title: "Persian, Iranian, and Farsi",
-    body: "Iranian can describe a nationality and also a broad family of peoples and languages. Persian can describe a language and cultural tradition; Farsi is the language’s name in Persian. A person may use more than one of these words for their identity.",
+    body: "Iranian can describe a nationality and also a broad family of peoples and languages. Persian can describe a language and cultural tradition; Farsi is the language’s name in Persian. A person may use more than one of these words, and preferred identity terms vary by person and context.",
   },
   {
     topic: "world-history",
