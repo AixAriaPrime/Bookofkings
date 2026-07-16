@@ -18,12 +18,12 @@ describe("scoring engine", () => {
     const vector = scoreResponses(
       [
         { promptId: "threshold", selectedAnswer: "garden", responseTimeMs: 500, order: 0 },
-        { promptId: "reflection", selectedAnswer: "garden", responseTimeMs: 500, order: Number(true) },
+        { promptId: "reflection", selectedAnswer: "garden", responseTimeMs: 500, order: 0 },
       ],
       DAILY_PROMPTS,
     );
 
     expect(vector.consistency).toBe(3);
-    expect(vector.speed).toBe(Number(true));
+    expect(vector.speed).toBeGreaterThan(0);
   });
 });

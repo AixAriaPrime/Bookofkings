@@ -32,6 +32,11 @@ describe("Mirror card rendering", () => {
       mimeType: "image/png",
     });
     expect(metadata.fileName).toContain("wayfinder");
-    expect(wrapText(context, "a wider horizon restores direction", 80).length).toBeGreaterThan(Number(true));
+    expect(wrapText(context, "a wider horizon restores direction", 80)).toEqual([
+      "a wider",
+      "horizon",
+      "restores",
+      "direction",
+    ]);
   });
 });

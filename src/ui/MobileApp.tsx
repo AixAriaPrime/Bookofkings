@@ -142,7 +142,7 @@ export function MobileApp() {
                   placeholder="A word or a sentence…"
                   maxLength={280}
                 />
-                <button className="primary-button" onClick={() => answer(reflection)}>
+                <button className="primary-button" onClick={() => answer(reflection.trim())}>
                   See my mirror <span>→</span>
                 </button>
                 <button className="text-button" onClick={() => answer("")}>Skip for today</button>

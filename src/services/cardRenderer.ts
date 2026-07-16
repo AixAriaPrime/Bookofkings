@@ -62,7 +62,7 @@ function drawWrappedText(
   lineHeight: number,
 ) {
   const lines = wrapText(context, text, 840);
-  const firstY = startY - ((lines.length - Number(true)) * lineHeight) / 2;
+  const firstY = startY - (lines.length * lineHeight) / 2 + lineHeight / 2;
   lines.forEach((line, index) => {
     context.fillText(line, CARD_WIDTH / 2, firstY + index * lineHeight);
   });

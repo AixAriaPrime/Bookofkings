@@ -25,7 +25,9 @@ describe("ritual response engine", () => {
     }
 
     expect(transition.session.status).toBe("complete");
-    expect(transition.session.responses.map((response) => response.order)).toEqual([0, Number(true), 2, 3]);
+    transition.session.responses.forEach((response, index) => {
+      expect(response.order).toBe(index);
+    });
     expect(transition.vector).toMatchObject({
       consistency: 5,
       speed: 3,

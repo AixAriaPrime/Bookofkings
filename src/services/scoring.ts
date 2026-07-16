@@ -27,7 +27,7 @@ export function scoreResponses(
     const option = options.find((item) => item.id === response.selectedAnswer);
     for (const trait of traits) vector[trait] += option?.traits[trait] ?? 0;
     if (prompt?.type !== "text" && response.responseTimeMs < 4000) {
-      vector.speed += Number(true);
+      vector.speed++;
     }
   }
   return vector;
