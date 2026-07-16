@@ -1,6 +1,7 @@
 import type {
   Archetype,
   PromptOption,
+  RitualPrompt,
   RitualResponse,
   Trait,
   TraitVector,
@@ -16,15 +17,24 @@ const traits: Trait[] = [
 
 export function scoreResponses(
   responses: RitualResponse[],
-  options: PromptOption[],
+  source: PromptOption[] | RitualPrompt[],
 ): TraitVector {
   const vector = Object.fromEntries(traits.map((trait) => [trait, 0])) as TraitVector;
+  const prompts = isPromptCollection(source) ? source : null;
   for (const response of responses) {
+    const prompt = prompts?.find((item) => item.id === response.promptId);
+    const options = prompt?.options ?? (source as PromptOption[]);
     const option = options.find((item) => item.id === response.selectedAnswer);
     for (const trait of traits) vector[trait] += option?.traits[trait] ?? 0;
-    vector.speed += response.responseTimeMs < 4000 ? 1 : 0;
+    if (prompt?.type !== "text" && response.responseTimeMs < 4000) {
+      vector.speed += Number(true);
+    }
   }
   return vector;
+}
+
+function isPromptCollection(source: PromptOption[] | RitualPrompt[]): source is RitualPrompt[] {
+  return source.length > 0 && "question" in source[0];
 }
 
 export function mapArchetype(vector: TraitVector): Archetype {
@@ -33,4 +43,3 @@ export function mapArchetype(vector: TraitVector): Archetype {
   if (vector.ambiguityTolerance >= 3) return "Flame";
   return "Wayfinder";
 }
-

@@ -38,5 +38,6 @@ export const DAILY_PROMPTS: RitualPrompt[] = [
     eyebrow: "Optional reflection",
     question: "What would you like to carry forward?",
     options: [],
+    optional: true,
   },
 ];

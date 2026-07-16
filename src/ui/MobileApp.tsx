@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DAILY_PROMPTS } from "@/data/prompts";
 import { LEARNING_STORIES } from "@/data/learning";
 import type { MirrorResult, RitualSession } from "@/domain/ritual";
 import type { Route } from "@/navigation/routes";
 import { track } from "@/services/analytics";
-import { exportMirrorCard } from "@/services/cardRenderer";
+import { exportMirrorCard, mirrorCardExportMetadata } from "@/services/cardRenderer";
 import { nextPrompt } from "@/services/promptEngine";
 import { generateResult } from "@/services/resultEngine";
 import { isReturnVisit, markRitualComplete, markVisit } from "@/services/retention";
-import { mapArchetype, scoreResponses } from "@/services/scoring";
-import { createSession, currentTime, recordResponse } from "@/services/session";
+import { startGuestRitual, submitRitualResponse } from "@/services/ritualEngine";
+import { currentTime } from "@/services/session";
 import { MirrorCard } from "./MirrorCard";
 import { PremiumSheet } from "./PremiumSheet";
 import { SagePanel } from "./SagePanel";
@@ -33,7 +33,6 @@ export function MobileApp() {
   const startedAt = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prompt = session ? nextPrompt(DAILY_PROMPTS, session) : null;
-  const allOptions = useMemo(() => DAILY_PROMPTS.flatMap((item) => item.options), []);
 
   useEffect(() => {
     track(isReturnVisit(localStorage) ? "return_visit" : "session_start");
@@ -41,29 +40,28 @@ export function MobileApp() {
   }, []);
 
   function begin() {
-    const next = createSession();
+    const next = startGuestRitual(DAILY_PROMPTS);
     startedAt.current = currentTime();
-    setSession(next);
+    setSession(next.session);
     track("session_start");
   }
 
   function answer(selectedAnswer: string) {
     if (!session || !prompt) return;
-    const updated = recordResponse(
+    const transition = submitRitualResponse(
+      DAILY_PROMPTS,
       session,
       {
         promptId: prompt.id,
-        selectedAnswer,
+        answer: selectedAnswer,
         responseTimeMs: currentTime() - startedAt.current,
       },
-      DAILY_PROMPTS.length,
     );
     track("prompt_complete", { prompt: prompt.id });
-    setSession(updated);
+    setSession(transition.session);
     startedAt.current = currentTime();
-    if (updated.status === "complete") {
-      const vector = scoreResponses(updated.responses, allOptions);
-      setResult(generateResult(mapArchetype(vector)));
+    if (transition.result) {
+      setResult(transition.result);
       setRoute("mirror");
       markRitualComplete(localStorage);
       track("result_view");
@@ -87,9 +85,10 @@ export function MobileApp() {
   function share() {
     if (!canvasRef.current) return;
     const url = exportMirrorCard(canvasRef.current, result);
+    const metadata = mirrorCardExportMetadata(result);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "my-mirror.png";
+    link.download = metadata.fileName;
     link.click();
     track("share_tap");
   }
@@ -143,10 +142,10 @@ export function MobileApp() {
                   placeholder="A word or a sentence…"
                   maxLength={280}
                 />
-                <button className="primary-button" onClick={() => answer(reflection.trim() || "(skipped)")}>
+                <button className="primary-button" onClick={() => answer(reflection)}>
                   See my mirror <span>→</span>
                 </button>
-                <button className="text-button" onClick={() => answer("(skipped)")}>Skip for today</button>
+                <button className="text-button" onClick={() => answer("")}>Skip for today</button>
               </div>
             ) : (
               <div className="answer-list">
