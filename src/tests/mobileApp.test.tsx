@@ -17,5 +17,7 @@ describe("Mobile app", () => {
     fireEvent.click(screen.getByRole("button", { name: /Back to the library/i }));
 
     expect(screen.getByRole("heading", { name: /Persian stories/i })).toBeVisible();
+    expect(screen.queryByRole("button", { name: /Back to the library/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Read Hospitality as connection" })).toBeVisible();
   });
 });
