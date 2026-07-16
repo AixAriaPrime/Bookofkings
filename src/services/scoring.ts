@@ -20,10 +20,13 @@ export function scoreResponses(
   source: PromptOption[] | RitualPrompt[],
 ): TraitVector {
   const vector = Object.fromEntries(traits.map((trait) => [trait, 0])) as TraitVector;
-  const prompts = isPromptCollection(source) ? source : null;
   for (const response of responses) {
-    const prompt = prompts?.find((item) => item.id === response.promptId);
-    const options = prompt?.options ?? (source as PromptOption[]);
+    const prompt = source.find(
+      (item): item is RitualPrompt => "question" in item && item.id === response.promptId,
+    );
+    const options =
+      prompt?.options ??
+      source.filter((item): item is PromptOption => !("question" in item));
     const option = options.find((item) => item.id === response.selectedAnswer);
     for (const trait of traits) vector[trait] += option?.traits[trait] ?? 0;
     if (prompt?.type !== "text" && response.responseTimeMs < 4000) {
@@ -31,10 +34,6 @@ export function scoreResponses(
     }
   }
   return vector;
-}
-
-function isPromptCollection(source: PromptOption[] | RitualPrompt[]): source is RitualPrompt[] {
-  return source.some((item) => "question" in item);
 }
 
 export function mapArchetype(vector: TraitVector): Archetype {

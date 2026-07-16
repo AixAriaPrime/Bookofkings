@@ -92,4 +92,7 @@ function validatePrompts(prompts: RitualPrompt[]) {
   if (prompts.length === 0) throw new Error("A ritual requires at least one prompt");
   const ids = new Set(prompts.map((prompt) => prompt.id));
   if (ids.size !== prompts.length) throw new Error("Prompt ids must be unique");
+  if (prompts.some((prompt) => prompt.optional && prompt.type !== "text")) {
+    throw new Error("Only text prompts can be optional");
+  }
 }
