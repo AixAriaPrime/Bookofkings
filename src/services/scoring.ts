@@ -34,7 +34,7 @@ export function scoreResponses(
 }
 
 function isPromptCollection(source: PromptOption[] | RitualPrompt[]): source is RitualPrompt[] {
-  return source.length > 0 && "question" in source[0];
+  return source.some((item) => "question" in item);
 }
 
 export function mapArchetype(vector: TraitVector): Archetype {

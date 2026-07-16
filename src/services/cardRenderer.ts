@@ -1,8 +1,20 @@
 import type { MirrorResult } from "@/domain/ritual";
 import { colors } from "@/theme/tokens";
 
-export const CARD_WIDTH = 900 + 90 + 90;
-export const CARD_HEIGHT = 960 * 2;
+const CARD_BASE_WIDTH = 360;
+const CARD_BASE_HEIGHT = 640;
+const CARD_MARGIN = 60;
+const CARD_TEXT_WIDTH = CARD_BASE_WIDTH * 3 - CARD_MARGIN * 4;
+const ARCHETYPE_CENTER_Y = 430;
+const TITLE_CENTER_Y = 600;
+const SUMMARY_CENTER_Y = 900;
+const QUOTE_CENTER_Y = CARD_BASE_HEIGHT * 2;
+const ARCHETYPE_LINE_HEIGHT = 54;
+const TITLE_LINE_HEIGHT = 88;
+const COPY_LINE_HEIGHT = 64;
+
+export const CARD_WIDTH = CARD_BASE_WIDTH * 3;
+export const CARD_HEIGHT = CARD_BASE_HEIGHT * 3;
 
 export interface MirrorCardExportMetadata {
   width: number;
@@ -37,16 +49,41 @@ export function exportMirrorCard(canvas: HTMLCanvasElement, result: MirrorResult
   context.fillRect(0, 0, CARD_WIDTH, CARD_HEIGHT);
   context.strokeStyle = colors.gold;
   context.lineWidth = 6 * 2;
-  context.strokeRect(60, 60, CARD_WIDTH - 60 * 2, CARD_HEIGHT - 60 * 2);
+  context.strokeRect(
+    CARD_MARGIN,
+    CARD_MARGIN,
+    CARD_WIDTH - CARD_MARGIN * 2,
+    CARD_HEIGHT - CARD_MARGIN * 2,
+  );
   context.fillStyle = colors.ivory;
   context.textAlign = "center";
   context.textBaseline = "middle";
 
   const sections = [
-    { text: result.archetype.toUpperCase(), font: "36px Arial", y: 430, lineHeight: 54 },
-    { text: result.title, font: "72px Georgia", y: 600, lineHeight: 88 },
-    { text: result.summary, font: "48px Georgia", y: 900, lineHeight: 64 },
-    { text: `“${result.shareText}”`, font: "italic 48px Georgia", y: 640 * 2, lineHeight: 64 },
+    {
+      text: result.archetype.toUpperCase(),
+      font: "36px Arial",
+      y: ARCHETYPE_CENTER_Y,
+      lineHeight: ARCHETYPE_LINE_HEIGHT,
+    },
+    {
+      text: result.title,
+      font: "72px Georgia",
+      y: TITLE_CENTER_Y,
+      lineHeight: TITLE_LINE_HEIGHT,
+    },
+    {
+      text: result.summary,
+      font: "48px Georgia",
+      y: SUMMARY_CENTER_Y,
+      lineHeight: COPY_LINE_HEIGHT,
+    },
+    {
+      text: `“${result.shareText}”`,
+      font: "italic 48px Georgia",
+      y: QUOTE_CENTER_Y,
+      lineHeight: COPY_LINE_HEIGHT,
+    },
   ];
   for (const section of sections) {
     context.font = section.font;
@@ -61,7 +98,7 @@ function drawWrappedText(
   startY: number,
   lineHeight: number,
 ) {
-  const lines = wrapText(context, text, 840);
+  const lines = wrapText(context, text, CARD_TEXT_WIDTH);
   const firstY = startY - (lines.length * lineHeight) / 2 + lineHeight / 2;
   lines.forEach((line, index) => {
     context.fillText(line, CARD_WIDTH / 2, firstY + index * lineHeight);
