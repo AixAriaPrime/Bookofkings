@@ -15,12 +15,14 @@ import { createSession, currentTime, recordResponse } from "@/services/session";
 import { MirrorCard } from "./MirrorCard";
 import { PremiumSheet } from "./PremiumSheet";
 import { SagePanel } from "./SagePanel";
+import { SettingsScreen } from "./SettingsScreen";
 
 const defaultResult = generateResult("Gardener");
 const navItems: { id: Route; label: string; glyph: string }[] = [
   { id: "ritual", label: "Today", glyph: "✦" },
   { id: "learn", label: "Discover", glyph: "⌘" },
   { id: "archive", label: "Archive", glyph: "◫" },
+  { id: "settings", label: "Settings", glyph: "⚙" },
 ];
 
 export function MobileApp() {
@@ -219,6 +221,8 @@ export function MobileApp() {
             <MirrorCard result={result} />
           </section>
         )}
+
+        {route === "settings" && <SettingsScreen />}
       </div>
 
       <nav className="bottom-nav" aria-label="Primary navigation">

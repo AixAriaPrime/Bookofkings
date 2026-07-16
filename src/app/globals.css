@@ -169,7 +169,7 @@ h1, h2, h3 { font-family: var(--font-display), Georgia, serif; font-weight: 500;
 .bottom-nav {
   position: fixed; z-index: 9; bottom: 0; left: 50%; transform: translateX(-50%); width: min(100%, 520px);
   height: 72px; background: rgba(255,250,240,.98); border-top: 1px solid var(--pale-gold);
-  display: grid; grid-template-columns: repeat(3, 1fr); padding: 5px 18px max(5px, env(safe-area-inset-bottom));
+  display: grid; grid-template-columns: repeat(4, 1fr); padding: 5px 18px max(5px, env(safe-area-inset-bottom));
 }
 .bottom-nav button { border: 0; background: none; color: #898074; text-transform: uppercase; letter-spacing: .12em; font-size: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
 .bottom-nav button span { font-size: 18px; }
@@ -192,3 +192,25 @@ h1, h2, h3 { font-family: var(--font-display), Georgia, serif; font-weight: 500;
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+.settings-view { padding: 34px 0 42px; }
+.settings-view .section-heading { padding: 0 24px; margin-bottom: 28px; }
+.settings-group { margin-bottom: 32px; }
+.settings-group-title {
+  color: var(--muted); font-family: var(--font-sans); font-size: 9px;
+  font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
+  padding: 0 24px 8px; border-bottom: 1px solid rgba(200, 155, 60, .25);
+  margin-bottom: 2px;
+}
+.settings-list { list-style: none; }
+.settings-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 24px; border-bottom: 1px solid rgba(127, 127, 127, .07);
+  min-height: 50px;
+}
+.settings-row--action { cursor: pointer; }
+.settings-row--action:hover { background: rgba(200, 155, 60, .05); }
+.settings-label { color: var(--ink); font-size: 15px; font-family: var(--font-display); }
+.settings-value { color: var(--muted); font-size: 13px; }
+.settings-chevron { color: var(--gold); font-size: 22px; }
+.settings-chevron--danger { color: var(--vermilion); }
