@@ -18,6 +18,7 @@ import { PremiumSheet } from "./PremiumSheet";
 import { SagePanel } from "./SagePanel";
 
 const defaultResult = generateResult("Gardener");
+const archiveDateFormatter = new Intl.DateTimeFormat("en", { dateStyle: "medium" });
 const navItems: { id: Route; label: string; glyph: string }[] = [
   { id: "ritual", label: "Today", glyph: "✦" },
   { id: "learn", label: "Discover", glyph: "⌘" },
@@ -288,7 +289,7 @@ export function MobileApp() {
                 {history.map((entry) => (
                   <div className="archive-entry" key={entry.savedAt}>
                     <time dateTime={entry.savedAt}>
-                      {new Intl.DateTimeFormat("en", { dateStyle: "medium" }).format(new Date(entry.savedAt))}
+                      {archiveDateFormatter.format(new Date(entry.savedAt))}
                     </time>
                     <MirrorCard result={entry.result} />
                   </div>

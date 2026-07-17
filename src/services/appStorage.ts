@@ -76,7 +76,8 @@ function isResult(value: unknown): value is MirrorResult {
     typeof result.body === "string" &&
     typeof result.shareText === "string" &&
     typeof result.nextStep === "string" &&
-    !!result.asset &&
+    typeof result.asset === "object" &&
+    result.asset !== null &&
     typeof result.asset.palette === "string" &&
     typeof result.asset.template === "string"
   );
