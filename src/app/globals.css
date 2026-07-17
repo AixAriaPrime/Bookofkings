@@ -242,7 +242,7 @@ h1, h2, h3 { font-family: var(--font-display), Georgia, serif; font-weight: 500;
 .chat-message-user { margin-left: 32px; background: #e7dcc6; }
 .chat-message-mirror, .chat-message-sage { margin-right: 20px; border-left: 3px solid var(--gold); background: var(--paper); }
 .sage-chat button:disabled { cursor: wait; opacity: .65; }
-.status-message { min-height: 2em; color: var(--jade); text-align: center; font-size: small; }
+.status-message { color: var(--jade); text-align: center; font-size: small; }
 .archive-grid { display: grid; gap: 3rem; }
 .archive-entry time {
   display: block;

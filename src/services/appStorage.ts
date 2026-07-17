@@ -1,6 +1,6 @@
 import type { MirrorResult, RitualSession } from "@/domain/ritual";
 
-const APP_STATE_KEY = "book-of-kings-state";
+const APP_STATE_KEY = "book-of-kings-app-state";
 
 export interface SavedMirror {
   result: MirrorResult;

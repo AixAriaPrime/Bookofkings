@@ -45,7 +45,7 @@ export function MobileApp() {
     track(isReturnVisit(localStorage) ? "return_visit" : "session_start");
     markVisit(localStorage);
     let active = true;
-    queueMicrotask(() => {
+    Promise.resolve().then(() => {
       if (!active) return;
       const saved = loadAppState(localStorage);
       if (saved) {
@@ -213,7 +213,9 @@ export function MobileApp() {
               <button className="secondary-button" onClick={share}>Save share card <span>⇩</span></button>
             </div>
             <p className="tomorrow-note">Return tomorrow for a new mirror.</p>
-            <p className="status-message" role="status" aria-live="polite">{shareStatus}</p>
+            {shareStatus && (
+              <p className="status-message" role="status" aria-live="polite">{shareStatus}</p>
+            )}
             <canvas ref={canvasRef} hidden />
           </section>
         )}
