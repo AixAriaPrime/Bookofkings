@@ -284,8 +284,8 @@ export function MobileApp() {
             </header>
             {history.length > 0 ? (
               <div className="archive-grid">
-                {history.map((entry) => (
-                  <div className="archive-entry" key={`${entry.savedAt}-${entry.result.title}`}>
+                {history.map((entry, index) => (
+                  <div className="archive-entry" key={`${entry.savedAt}-${entry.result.title}-${index}`}>
                     <time dateTime={entry.savedAt}>
                       {new Intl.DateTimeFormat("en", { dateStyle: "medium" }).format(new Date(entry.savedAt))}
                     </time>
