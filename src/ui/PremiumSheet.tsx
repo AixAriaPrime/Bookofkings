@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { PREMIUM_PRODUCT } from "@/services/premium";
 
 export function PremiumSheet({
@@ -7,6 +8,23 @@ export function PremiumSheet({
   onClose: () => void;
   onSubscribe: () => void;
 }) {
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const previousFocus = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") onClose();
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      previousFocus?.focus();
+    };
+  }, [onClose]);
+
   return (
     <div className="modal-backdrop" role="presentation" onClick={onClose}>
       <section
@@ -16,7 +34,14 @@ export function PremiumSheet({
         aria-labelledby="premium-title"
         onClick={(event) => event.stopPropagation()}
       >
-        <button className="modal-close" onClick={onClose} aria-label="Close">×</button>
+        <button
+          ref={closeButtonRef}
+          className="modal-close"
+          onClick={onClose}
+          aria-label="Close premium offer"
+        >
+          ×
+        </button>
         <p className="premium-seal">✦</p>
         <p className="eyebrow">The complete manuscript</p>
         <h2 id="premium-title">{PREMIUM_PRODUCT.name}</h2>
@@ -35,4 +60,3 @@ export function PremiumSheet({
     </div>
   );
 }
-

@@ -242,6 +242,27 @@ h1, h2, h3 { font-family: var(--font-display), Georgia, serif; font-weight: 500;
 .chat-message-user { margin-left: 32px; background: #e7dcc6; }
 .chat-message-mirror, .chat-message-sage { margin-right: 20px; border-left: 3px solid var(--gold); background: var(--paper); }
 .sage-chat button:disabled { cursor: wait; opacity: .65; }
+.status-message { min-height: 2em; color: var(--jade); text-align: center; font-size: small; }
+.archive-grid { display: grid; gap: 3rem; }
+.archive-entry time {
+  display: block;
+  margin-bottom: 2rem;
+  color: var(--maroon);
+  text-align: center;
+  font-size: x-small;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.empty-state {
+  padding: 3rem 2rem;
+  border: thin solid var(--pale-gold);
+  background: var(--paper);
+  text-align: center;
+}
+.empty-state > span { color: var(--gold); font-size: xx-large; }
+.empty-state h2 { color: var(--lapis); font-size: xx-large; }
+.empty-state h2 { margin-block: 2rem; }
+.empty-state p { margin-bottom: 2rem; color: var(--muted); font-family: var(--font-display); }
 .sage-layer { animation: manuscript-open .65s cubic-bezier(.22,.8,.3,.99) both; }
 .sage-layer-answer { animation-delay: .08s; }
 .sage-layer-context { animation-delay: .2s; }
@@ -250,4 +271,8 @@ h1, h2, h3 { font-family: var(--font-display), Georgia, serif; font-weight: 500;
 @keyframes manuscript-open {
   from { opacity: 0; transform: translateY(8px) scale(.985); box-shadow: 0 0 24px rgba(200,85,60,.2); }
   to { opacity: .999; transform: none; box-shadow: none; }
+}
+@media (min-width: 700px) {
+  .story-grid, .archive-grid { grid-template-columns: auto auto; }
+  .story-card { min-height: 260px; }
 }
