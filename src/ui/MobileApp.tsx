@@ -100,6 +100,7 @@ export function MobileApp() {
   }
 
   function navigate(next: Route) {
+    setShareStatus("");
     if (next === "archive" && !isPremium) {
       track("premium_view", { source: "archive" });
       setPremiumOpen(true);
@@ -284,8 +285,8 @@ export function MobileApp() {
             </header>
             {history.length > 0 ? (
               <div className="archive-grid">
-                {history.map((entry, index) => (
-                  <div className="archive-entry" key={`${entry.savedAt}-${entry.result.title}-${index}`}>
+                {history.map((entry) => (
+                  <div className="archive-entry" key={entry.savedAt}>
                     <time dateTime={entry.savedAt}>
                       {new Intl.DateTimeFormat("en", { dateStyle: "medium" }).format(new Date(entry.savedAt))}
                     </time>
