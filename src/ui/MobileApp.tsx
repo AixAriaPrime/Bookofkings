@@ -6,6 +6,7 @@ import { LEARNING_STORIES } from "@/data/learning";
 import type { MirrorResult, RitualSession } from "@/domain/ritual";
 import type { Route } from "@/navigation/routes";
 import { track } from "@/services/analytics";
+import { loadAppState, saveAppState, type SavedMirror } from "@/services/appStorage";
 import { exportMirrorCard, mirrorCardExportMetadata } from "@/services/cardRenderer";
 import { nextPrompt } from "@/services/promptEngine";
 import { generateResult } from "@/services/resultEngine";
@@ -17,6 +18,7 @@ import { PremiumSheet } from "./PremiumSheet";
 import { SagePanel } from "./SagePanel";
 
 const defaultResult = generateResult("Gardener");
+const archiveDateFormatter = new Intl.DateTimeFormat("en", { dateStyle: "medium" });
 const navItems: { id: Route; label: string; glyph: string }[] = [
   { id: "ritual", label: "Today", glyph: "✦" },
   { id: "learn", label: "Discover", glyph: "⌘" },
@@ -31,6 +33,9 @@ export function MobileApp() {
   const [isPremium, setIsPremium] = useState(false);
   const [reflection, setReflection] = useState("");
   const [openStory, setOpenStory] = useState<string | null>(null);
+  const [history, setHistory] = useState<SavedMirror[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
+  const [shareStatus, setShareStatus] = useState("");
   const startedAt = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prompt = session ? nextPrompt(DAILY_PROMPTS, session) : null;
@@ -39,7 +44,27 @@ export function MobileApp() {
   useEffect(() => {
     track(isReturnVisit(localStorage) ? "return_visit" : "session_start");
     markVisit(localStorage);
+    let active = true;
+    Promise.resolve().then(() => {
+      if (!active) return;
+      const saved = loadAppState(localStorage);
+      if (saved) {
+        setSession(saved.session?.status === "active" ? saved.session : null);
+        setResult(saved.result);
+        setIsPremium(saved.isPremium);
+        setHistory(saved.history);
+      }
+      setIsHydrated(true);
+    });
+    return () => {
+      active = false;
+    };
   }, []);
+
+  useEffect(() => {
+    if (!isHydrated) return;
+    saveAppState(localStorage, { session, result, isPremium, history });
+  }, [history, isHydrated, isPremium, result, session]);
 
   function begin() {
     const next = startGuestRitual(DAILY_PROMPTS);
@@ -63,7 +88,12 @@ export function MobileApp() {
     setSession(transition.session);
     startedAt.current = currentTime();
     if (transition.result) {
-      setResult(transition.result);
+      const completedResult = transition.result;
+      setResult(completedResult);
+      setHistory((current) => [
+        { result: completedResult, savedAt: new Date().toISOString() },
+        ...current,
+      ]);
       setRoute("mirror");
       markRitualComplete(localStorage);
       track("result_view");
@@ -71,6 +101,7 @@ export function MobileApp() {
   }
 
   function navigate(next: Route) {
+    setShareStatus("");
     if (next === "archive" && !isPremium) {
       track("premium_view", { source: "archive" });
       setPremiumOpen(true);
@@ -87,13 +118,18 @@ export function MobileApp() {
 
   function share() {
     if (!canvasRef.current) return;
-    const url = exportMirrorCard(canvasRef.current, result);
-    const metadata = mirrorCardExportMetadata(result);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = metadata.fileName;
-    link.click();
-    track("share_tap");
+    try {
+      const url = exportMirrorCard(canvasRef.current, result);
+      const metadata = mirrorCardExportMetadata(result);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = metadata.fileName;
+      link.click();
+      setShareStatus("Your mirror card was saved.");
+      track("share_tap");
+    } catch {
+      setShareStatus("The card could not be saved. Please try again.");
+    }
   }
 
   return (
@@ -177,6 +213,9 @@ export function MobileApp() {
               <button className="secondary-button" onClick={share}>Save share card <span>⇩</span></button>
             </div>
             <p className="tomorrow-note">Return tomorrow for a new mirror.</p>
+            {shareStatus && (
+              <p className="status-message" role="status" aria-live="polite">{shareStatus}</p>
+            )}
             <canvas ref={canvasRef} hidden />
           </section>
         )}
@@ -247,7 +286,25 @@ export function MobileApp() {
               <p className="eyebrow">Your private archive</p>
               <h1>A history of noticing</h1>
             </header>
-            <MirrorCard result={result} />
+            {history.length > 0 ? (
+              <div className="archive-grid">
+                {history.map((entry) => (
+                  <div className="archive-entry" key={entry.savedAt}>
+                    <time dateTime={entry.savedAt}>
+                      {archiveDateFormatter.format(new Date(entry.savedAt))}
+                    </time>
+                    <MirrorCard result={entry.result} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="empty-state">
+                <span aria-hidden="true">✦</span>
+                <h2>Your archive is waiting</h2>
+                <p>Complete today’s ritual and your mirror will be kept here.</p>
+                <button className="primary-button" onClick={() => navigate("ritual")}>Begin a ritual</button>
+              </div>
+            )}
           </section>
         )}
       </div>
@@ -257,6 +314,7 @@ export function MobileApp() {
           <button
             key={item.id}
             className={route === item.id || (item.id === "ritual" && ["mirror", "sage"].includes(route)) ? "active" : ""}
+            aria-current={route === item.id || (item.id === "ritual" && ["mirror", "sage"].includes(route)) ? "page" : undefined}
             onClick={() => navigate(item.id)}
           >
             <span>{item.glyph}</span>{item.label}
