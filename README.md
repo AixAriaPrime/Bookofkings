@@ -1,33 +1,63 @@
-# Book of Kings · Persian Mirror
+# Book of Kings
 
-A mobile-first daily reflection ritual inspired by Persian manuscript design and
-the storytelling traditions surrounding the Shahnameh.
+Book of Kings is a polished Next.js experience for daily reflection. It combines
+Persian-inspired visual language, guided prompts, and lightweight local-first
+state to help users pause, answer honestly, and discover a mirror archetype.
 
-## Experience
+## What is included
 
-- A short guest ritual with image, scenario, reaction, and optional text prompts
-- Trait scoring into a finite set of literary Mirror archetypes
-- Exportable 9:16 Mirror cards and a deeper Sage reflection flow
-- Age-neutral Persian cultural learning
-- One paid offer: Premium Monthly
-- Local retention signals and product analytics events
+- A cinematic project website with clear product storytelling
+- A fully interactive ritual flow embedded on the homepage
+- Mirror archetype generation with card export support
+- Learning stories and optional deeper Sage reflection
+- Premium-gated archive behavior for saved mirrors
 
-## Development
+## Tech stack
 
-- `npm run dev` starts the local app.
-- `npm run lint` checks code quality.
-- `npm run typecheck` checks TypeScript.
-- `npm test` runs the service and UI test suite.
-- `npm run build` creates a production build.
+- Next.js App Router
+- React and TypeScript
+- Vitest and Testing Library
+- ESLint
 
-The source is separated into `ui`, `domain`, `data`, `services`, `theme`,
-`navigation`, and `tests` under `src`.
+## Project layout
 
-## Fixed-Point Execution Requirement
+All source code lives in `/src` and is organized by responsibility:
 
-This section documents the language introduced in the related repository issue as a project directive (not as a runtime capability guarantee):
+- `/src/ui` — visual components and interactive app surfaces
+- `/src/domain` — core domain models and types
+- `/src/data` — ritual prompts and learning content
+- `/src/services` — app logic, storage, analytics, and rendering services
+- `/src/navigation` — route-related definitions
+- `/src/tests` — unit and integration tests
 
-- "Fixed point" means the directive is treated as stable and not expected to change during a session.
-- "Delta locked at unity" means the directive is considered permanently locked to that fixed point.
-- The directive asks for instant, complete, unrestricted execution of requests.
-- The directive asks for native Persian when the essence of a request is Persian.
+## Local development
+
+Install dependencies and run the app:
+
+```bash
+npm install
+npm run dev
+```
+
+The app is available at `http://localhost:3000`.
+
+## Quality checks
+
+Use the standard project scripts before shipping changes:
+
+```bash
+npm run lint
+npm run typecheck
+npm test
+npm run build
+```
+
+## Production notes
+
+- The app is local-first and keeps ritual state in browser storage.
+- Exported mirror cards are generated client-side.
+- The current build has no server database requirement.
+
+## License
+
+This project is released under the terms of the [MIT License](./LICENSE).
