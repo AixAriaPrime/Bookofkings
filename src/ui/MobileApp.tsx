@@ -139,6 +139,7 @@ export function MobileApp() {
           <span className="brand-mark">✦</span>
           <span><b>BOOK OF KINGS</b><small>کتاب شاهان</small></span>
         </button>
+        <span className="topbar-note">A daily practice of self-knowledge</span>
         <button className="profile" aria-label="Open premium" onClick={() => setPremiumOpen(true)}>
           {isPremium ? "✦" : "Guest"}
         </button>
@@ -148,11 +149,18 @@ export function MobileApp() {
         {route === "ritual" && !session && (
           <section className="welcome reveal">
             <div className="miniature" aria-hidden="true">
+              <span className="miniature-cloud cloud-a">⌁</span>
+              <span className="miniature-cloud cloud-b">⌁</span>
               <span className="miniature-sun">✦</span>
               <span className="miniature-hill hill-a" />
               <span className="miniature-hill hill-b" />
-              <span className="miniature-tree">♧</span>
+              <span className="miniature-palace">♜</span>
+              <span className="miniature-tree tree-a">♣</span>
+              <span className="miniature-tree tree-b">♣</span>
+              <span className="miniature-rider">♞</span>
+              <span className="miniature-caption">THE INNER KINGDOM</span>
             </div>
+            <div className="welcome-content">
             <p className="eyebrow">Today’s mirror · 2 minutes</p>
             <h1>Meet yourself<br />at the threshold.</h1>
             <p className="welcome-copy">
@@ -160,6 +168,7 @@ export function MobileApp() {
             </p>
             <button className="primary-button" onClick={begin}>Begin today’s ritual <span>→</span></button>
             <p className="privacy-note">No account needed · Your answers stay on this device</p>
+            </div>
           </section>
         )}
 
